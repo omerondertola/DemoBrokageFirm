@@ -20,20 +20,20 @@
 
 2. All info should be stored in database as below:
 
-   Asset: id, customerId, assetName, size, usableSize
-   Order: id, customerId, assetName, orderSide, size, price, status, createDate
-   Customer: 
+           Asset: id, customerId, assetName, size, usableSize
+           Order: id, customerId, assetName, orderSide, size, price, status, createDate
+           Customer: id, firstName, lastName, email, password, role
 
 4. Authorization checks for Admins & Customers Performed.
 
-   @PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id ")
+           @PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id ")
 
 5. Matching end-point added.
 
 6. Locking mechanism added to prevent consistency errors.
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT a FROM Asset a WHERE a.customerId = :customerId and a.assetName = :name")
+            @Lock(LockModeType.PESSIMISTIC_WRITE)
+            @Query("SELECT a FROM Asset a WHERE a.customerId = :customerId and a.assetName = :name")
 
 7. Unit tests developed for services.
 
