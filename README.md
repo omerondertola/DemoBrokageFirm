@@ -1,22 +1,22 @@
 
 1. All endpoints are authorized with an admin user and password
 
-  HAS ADMIN ROLE: Can edit all records
-  Admin username: admin@gmail.com
-  Admin password: admin
-
-  HAS CUSTOMER ROLE: Can edit only own records
-  Customer username: omerondertola@gmail.com
-  Customer password: onder
-  
-  Customer username: defnetola@gmail.com
-  Customer password: defne
-  
-  Customer username: iremtola@gmail.com
-  Customer password: irem
-
-  Passwords encrypted with BCrypt
-  Http Session is stateful.
+        HAS ADMIN ROLE: Can edit all records
+        Admin username: admin@gmail.com
+        Admin password: admin
+      
+        HAS CUSTOMER ROLE: Can edit only own records
+        Customer username: omerondertola@gmail.com
+        Customer password: onder
+        
+        Customer username: defnetola@gmail.com
+        Customer password: defne
+        
+        Customer username: iremtola@gmail.com
+        Customer password: irem
+      
+        Passwords encrypted with BCrypt
+        Http Session is stateful.
 
 2. All info should be stored in database as below:
 
