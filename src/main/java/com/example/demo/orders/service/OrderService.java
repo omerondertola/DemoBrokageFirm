@@ -137,6 +137,7 @@ public class OrderService {
 
         // Increment the usableSize of the ASSET
         asset.setUsableSize(asset.getUsableSize() + order.getSize());
+        assetRepo.save(asset);
 
         // Mark the order as CANCELLED.
         order.setOrderStatus(OrderStatus.CANCELLED);
