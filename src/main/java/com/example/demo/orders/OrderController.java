@@ -103,7 +103,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.cancelOrder(orderId,customerId));
     }
 
-    // TODO - DELETE ORDER REQUIREMENT
+    // TODO - MATCH ORDER REQUIREMENT
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/match/{orderId}")
     public ResponseEntity<Order> matchOrder(
