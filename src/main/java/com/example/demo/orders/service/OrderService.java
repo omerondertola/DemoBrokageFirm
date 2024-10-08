@@ -223,11 +223,6 @@ public class OrderService {
         if(optAssetToBuy.isPresent()) {
             // Update Size & Usable Size of the Asset
             Asset assetToBuy = optAssetToBuy.get();
-            double newValue = assetToBuy.getAssetValue() + order.getValue();
-            double newSize = assetToBuy.getSize() + order.getSize();
-            double newAverage = newValue / newSize;
-
-            assetToBuy.setAveragePrice(newAverage);
             assetToBuy.setSize(assetToBuy.getSize() + order.getSize());
             assetToBuy.setUsableSize(assetToBuy.getUsableSize() + order.getSize());
             assetRepo.save(assetToBuy);
@@ -241,7 +236,6 @@ public class OrderService {
                     .assetName(order.getAssetName())
                     .size(order.getSize())
                     .usableSize(order.getSize())
-                    .averagePrice(order.getPrice())
                     .customerId(order.getCustomerId())
                     .build();
             assetRepo.save(newAsset);
@@ -278,9 +272,6 @@ public class OrderService {
             // Update Size & Usable Size of the
             // Asset to reflect SELL operation
             Asset assetToSell = optAssetToSell.get();
-            double avgPrice = (assetToSell.getAssetValue() - order.getValue()) /
-                    (assetToSell.getSize() - order.getSize());
-            assetToSell.setAveragePrice(avgPrice);
             assetToSell.setSize(assetToSell.getSize() - order.getSize());
             assetRepo.save(assetToSell);
         } else {
