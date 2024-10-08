@@ -47,7 +47,7 @@
         {POST [/apis/v1/orders/{customerId}]} -> com.example.demo.orders.OrderController#createOrder(long, OrderDto)
 
         MATCH ORDER:
-        {DELETE [/apis/v1/orders/match/{orderId}]} -> com.example.demo.orders.OrderController#matchOrder(long)
+        {POST [/apis/v1/orders/match/{orderId}]} -> com.example.demo.orders.OrderController#matchOrder(long)
 
         QUERY ALL ORDERS:
         {GET [/apis/v1/orders]} -> com.example.demo.orders.OrderController#getAllOrders()
