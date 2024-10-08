@@ -105,7 +105,7 @@ public class OrderController {
 
     // TODO - MATCH ORDER REQUIREMENT
     @PreAuthorize("hasAuthority('ADMIN')")
-    @DeleteMapping("/match/{orderId}")
+    @PostMapping("/match/{orderId}")
     public ResponseEntity<Order> matchOrder(
             @PathVariable("orderId")
             long orderId
