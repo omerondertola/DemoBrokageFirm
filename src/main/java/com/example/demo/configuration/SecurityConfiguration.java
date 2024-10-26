@@ -25,6 +25,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         //.requestMatchers("/apis/**").access(myAuthorizationManager)
                         .anyRequest().authenticated()
                 )
