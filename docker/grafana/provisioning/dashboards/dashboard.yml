@@ -1,5 +1,6 @@
 apiVersion: 1
-# Specifies the version of the configuration format. Currently, only version "1" is supported by Grafana.
+# Specifies the version of the configuration format. Currently, only version "1"
+# is supported by Grafana.
 
 providers:
   - name: dashboards
@@ -20,5 +21,7 @@ providers:
       # Grafana will load all JSON files in this directory as dashboards upon startup.
 
       foldersFromFilesStructure: true
-      # When set to true, Grafana organizes dashboards into folders based on the directory structure of files within the specified path.
-      # This allows for automatic categorization of dashboards in Grafana based on how they are organized in the filesystem.
+      # When set to true, Grafana organizes dashboards into folders based on the directory
+      # structure of files within the specified path.
+      # This allows for automatic categorization of dashboards in Grafana based on how
+      # they are organized in the filesystem.
