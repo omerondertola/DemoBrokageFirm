@@ -1,19 +1,17 @@
 package com.example.demo.assets;
 
-import com.example.demo.assets.service.AssetNotFoundException;
-import com.example.demo.assets.service.AssetService;
-import com.example.demo.assets.service.NotEnoughMoneyException;
 import com.example.demo.assets.model.Asset;
 import com.example.demo.assets.model.DepositMoneyDto;
 import com.example.demo.assets.model.WithdrawMoneyDto;
-import com.example.demo.utils.ControllerUtils;
+import com.example.demo.assets.service.AssetNotFoundException;
+import com.example.demo.assets.service.AssetService;
+import com.example.demo.assets.service.NotEnoughMoneyException;
 import com.example.demo.customers.service.CustomerNotFoundException;
+import com.example.demo.utils.ControllerUtils;
 import io.micrometer.observation.annotation.Observed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,137 +21,190 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * REST Controller for managing customer assets.
+ * Controller for managing customer assets.
  * <p>
- * This controller provides endpoints to view, deposit, and withdraw funds from asset accounts.
+ * This provides endpoints to view, deposit, and withdraw funds.
  * <p>
- * Authentication: Basic Authentication with username `admin@gmail.com` and password `admin`.
+ * Authentication: Basic with username `admin@gmail.com`, password `admin`.
  */
-@RestController // Marks this class as a REST controller in Spring
-@RequiredArgsConstructor // Automatically generates a constructor with required dependencies
-@RequestMapping("/apis/v1/assets") // Base URL mapping for all endpoints in this controller
-@Log // Enables Java logging for this class
+@RestController // Allows handling HTTP requests
+@RequiredArgsConstructor // Auto-generates constructor
+@RequestMapping("/apis/v1/assets") // Base URL for endpoints
+@Log // Enables logging for this class
 public class AssetController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AssetController.class);
-
-    // Service to handle asset-related operations
-    private final AssetService assetService;
+    private final AssetService assetService; // Service to manage assets
 
     /**
-     * Retrieves all assets.
-     * Accessible only to users with ADMIN authority.
+     * Retrieves all assets. Only ADMINs can access.
+     * <p>
+     * <b>Annotations:</b>
+     * <ul>
+     *   <li><code>@GetMapping</code>
+     *     <ul><li>Maps GET requests.</li></ul>
+     *   </li>
+     *   <li><code>@PreAuthorize("hasAuthority('ADMIN')")</code>
+     *     <ul><li>Limits to ADMIN access.</li></ul>
+     *   </li>
+     *   <li><code>@Observed</code>
+     *     <ul><li>Tracks metrics.</li></ul>
+     *   </li>
+     * </ul>
      *
-     * @return ResponseEntity containing a list of all assets.
+     * @return list of all assets.
      *
-     * Example `curl` command:
+     * Example:
      * ```bash
      * curl -u admin@gmail.com:admin -X GET "http://localhost:8080/apis/v1/assets"
      * ```
      */
-    @GetMapping // Maps HTTP GET requests to this method
-    @PreAuthorize("hasAuthority('ADMIN')") // Access restricted to users with ADMIN authority
-    @Observed(name = "getAllAssets", contextualName = "get-all-assets") // For monitoring metrics with Micrometer
+    @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Observed(name = "getAllAssets", contextualName = "get-all-assets")
     public ResponseEntity<List<Asset>> getAllAssets() {
         log.info("Get All Assets Called..");
         try {
-            Thread.sleep(200); // Simulates delay; remove in production
+            Thread.sleep(200); // Simulates delay
         } catch (Throwable e) {
-            // Log or handle exception
+            // Handle exception if necessary
         }
-        return ResponseEntity.ok(assetService.getAllAssets()); // Returns a list of all assets
+        return ResponseEntity.ok(assetService.getAllAssets());
     }
 
     /**
-     * Retrieves all assets belonging to a specific customer.
-     * Accessible to users with ADMIN authority or the specific customer.
+     * Retrieves assets of a specific customer.
+     * Admins or the customer can access.
      *
-     * @param customerId The ID of the customer whose assets are requested.
-     * @return ResponseEntity containing a list of the customer’s assets.
-     * @throws CustomerNotFoundException if the customer is not found.
+     * <p><b>Annotations:</b></p>
+     * <ul>
+     *   <li><code>@GetMapping("/{customerId}")</code>
+     *     <ul><li>Maps GET requests with a customer ID.</li></ul>
+     *   </li>
+     *   <li><code>@PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id")</code>
+     *     <ul><li>Access limited to admin or specified customer.</li></ul>
+     *   </li>
+     *   <li><code>@Observed</code>
+     *     <ul><li>Tracks metrics for observability.</li></ul>
+     *   </li>
+     * </ul>
      *
-     * Example `curl` command:
+     * @param customerId ID of the customer.
+     * @return list of assets for the customer.
+     * @throws CustomerNotFoundException if customer is not found.
+     *
+     * Example:
      * ```bash
      * curl -u admin@gmail.com:admin -X GET "http://localhost:8080/apis/v1/assets/{customerId}"
      * ```
      */
-    @GetMapping("/{customerId}") // Maps HTTP GET requests with a customerId path variable to this method
-    @PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id") // Access restricted to admin or the customer
-    @Observed(name = "getAssetsOfCustomer", contextualName = "get-assets-of-customer") // For tracking with Micrometer
+    @GetMapping("/{customerId}")
+    @PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id")
+    @Observed(name = "getAssetsOfCustomer", contextualName = "get-assets-of-customer")
     public ResponseEntity<List<Asset>> getAssetsOfCustomer(
-            @PathVariable("customerId") long customerId // Binds customerId path variable to this parameter
+            @PathVariable("customerId") long customerId
     ) throws CustomerNotFoundException {
         log.info("Getting assets for customer ID: " + customerId);
         try {
-            Thread.sleep(200); // Simulates delay; remove in production
+            Thread.sleep(200); // Simulates delay
         } catch (Throwable e) {
-            // Log or handle exception
+            // Handle exception if necessary
         }
-        return ResponseEntity.ok(assetService.getAssetsOfCustomer(customerId)); // Returns the customer's assets
+        return ResponseEntity.ok(assetService.getAssetsOfCustomer(customerId));
     }
 
     /**
-     * Deposits money into a customer’s asset account.
-     * Accessible to users with ADMIN authority or the specific customer.
+     * Deposits money into a customer's asset account.
+     * Admins or the customer can access.
      *
-     * @param customerId The ID of the customer whose account will be credited.
-     * @param depositMoneyDto The deposit amount and other deposit details.
-     * @param bindingResult Used for validating the request body.
-     * @return ResponseEntity containing the updated balance or BAD_REQUEST status if validation fails.
+     * <p><b>Annotations:</b></p>
+     * <ul>
+     *   <li><code>@PostMapping("/deposit/{customerId}")</code>
+     *     <ul><li>Maps POST requests with customer ID.</li></ul>
+     *   </li>
+     *   <li><code>@PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id")</code>
+     *     <ul><li>Access limited to admin or specified customer.</li></ul>
+     *   </li>
+     *   <li><code>@Valid</code>
+     *     <ul><li>Validates request body.</li></ul>
+     *   </li>
+     *   <li><code>@RequestBody</code>
+     *     <ul><li>Binds request body to parameter.</li></ul>
+     *   </li>
+     * </ul>
+     *
+     * @param customerId ID of the customer.
+     * @param depositMoneyDto deposit details.
+     * @param bindingResult result of validation.
+     * @return updated balance, or BAD_REQUEST if validation fails.
      * @throws AssetNotFoundException if the asset is not found.
      *
-     * Example `curl` command:
+     * Example:
      * ```bash
-     * curl -u admin@gmail.com:admin -X POST "http://localhost:8080/apis/v1/assets/deposit/{customerId}" \
-     *      -H "Content-Type: application/json" \
-     *      -d '{"amount": 100.0}'
+     * curl -u admin@gmail.com:admin -X POST "http://localhost:8080/apis/v1/assets/deposit/{customerId}"
+     * -H "Content-Type: application/json" -d '{"amount": 100.0}'
      * ```
      */
-    @PostMapping("/deposit/{customerId}") // Maps HTTP POST requests with a customerId path variable to this method
-    @PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id") // Access restricted to admin or the customer
+    @PostMapping("/deposit/{customerId}")
+    @PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id")
     public ResponseEntity<Double> depositMoney(
-            @PathVariable("customerId") long customerId, // Binds customerId path variable to this parameter
-            @Valid @RequestBody DepositMoneyDto depositMoneyDto, // Validates incoming JSON request data
-            BindingResult bindingResult // Holds validation errors, if any
+            @PathVariable("customerId") long customerId,
+            @Valid @RequestBody DepositMoneyDto depositMoneyDto,
+            BindingResult bindingResult
     ) throws AssetNotFoundException {
         if (bindingResult.hasErrors()) {
-            ControllerUtils.logErrors(bindingResult); // Logs validation errors
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Returns a 400 Bad Request if validation fails
+            ControllerUtils.logErrors(bindingResult); // Log validation errors
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return ResponseEntity.ok(assetService.depositMoney(customerId, depositMoneyDto)); // Returns updated balance
+            return ResponseEntity.ok(assetService.depositMoney(customerId, depositMoneyDto));
         }
     }
 
     /**
-     * Withdraws money from a customer’s asset account.
-     * Accessible to users with ADMIN authority or the specific customer.
+     * Withdraws money from a customer's asset account.
+     * Admins or the customer can access.
      *
-     * @param customerId The ID of the customer whose account will be debited.
-     * @param withdrawMoneyDto The withdrawal amount and other withdrawal details.
-     * @param bindingResult Used for validating the request body.
-     * @return ResponseEntity containing the updated balance or BAD_REQUEST status if validation fails.
-     * @throws NotEnoughMoneyException if there is insufficient balance.
+     * <p><b>Annotations:</b></p>
+     * <ul>
+     *   <li><code>@PostMapping("/withdraw/{customerId}")</code>
+     *     <ul><li>Maps POST requests with customer ID.</li></ul>
+     *   </li>
+     *   <li><code>@PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id")</code>
+     *     <ul><li>Access limited to admin or specified customer.</li></ul>
+     *   </li>
+     *   <li><code>@Valid</code>
+     *     <ul><li>Validates request body.</li></ul>
+     *   </li>
+     *   <li><code>@RequestBody</code>
+     *     <ul><li>Binds request body to parameter.</li></ul>
+     *   </li>
+     * </ul>
+     *
+     * @param customerId ID of the customer.
+     * @param withdrawMoneyDto withdrawal details.
+     * @param bindingResult result of validation.
+     * @return updated balance, or BAD_REQUEST if validation fails.
+     * @throws NotEnoughMoneyException if balance is insufficient.
      * @throws AssetNotFoundException if the asset is not found.
      *
-     * Example `curl` command:
+     * Example:
      * ```bash
-     * curl -u admin@gmail.com:admin -X POST "http://localhost:8080/apis/v1/assets/withdraw/{customerId}" \
-     *      -H "Content-Type: application/json" \
-     *      -d '{"amount": 50.0}'
+     * curl -u admin@gmail.com:admin -X POST
+     *      "http://localhost:8080/apis/v1/assets/withdraw/{customerId}"
+     *      -H "Content-Type: application/json" -d '{"amount": 50.0}'
      * ```
      */
-    @PostMapping("/withdraw/{customerId}") // Maps HTTP POST requests with a customerId path variable to this method
-    @PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id") // Access restricted to admin or the customer
+    @PostMapping("/withdraw/{customerId}")
+    @PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id")
     public ResponseEntity<Double> withdrawMoney(
-            @PathVariable("customerId") long customerId, // Binds customerId path variable to this parameter
-            @Valid @RequestBody WithdrawMoneyDto withdrawMoneyDto, // Validates incoming JSON request data
-            BindingResult bindingResult // Holds validation errors, if any
+            @PathVariable("customerId") long customerId,
+            @Valid @RequestBody WithdrawMoneyDto withdrawMoneyDto,
+            BindingResult bindingResult
     ) throws NotEnoughMoneyException, AssetNotFoundException {
         if (bindingResult.hasErrors()) {
-            ControllerUtils.logErrors(bindingResult); // Logs validation errors
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Returns a 400 Bad Request if validation fails
+            ControllerUtils.logErrors(bindingResult); // Log validation errors
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return ResponseEntity.ok(assetService.withdrawMoney(customerId, withdrawMoneyDto)); // Returns updated balance
+            return ResponseEntity.ok(assetService.withdrawMoney(customerId, withdrawMoneyDto));
         }
     }
 }
