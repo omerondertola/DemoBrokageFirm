@@ -1,47 +1,58 @@
 apiVersion: 1
-# Specifies the version of the configuration format. Currently, only version "1" is supported by Grafana.
+# Specifies the version of the configuration format. Currently, only
+# version "1" is supported by Grafana.
 
 datasources:
   - name: Prometheus
     # Defines the name of the Prometheus data source in Grafana.
 
     type: prometheus
-    # Specifies the type of data source. "prometheus" indicates it is a Prometheus server.
+    # Specifies the type of data source. "prometheus" indicates it
+    # is a Prometheus server.
 
     access: proxy
-    # Sets the access mode to "proxy", meaning Grafana will proxy requests to Prometheus.
+    # Sets the access mode to "proxy", meaning Grafana will proxy
+    # requests to Prometheus.
 
     url: http://host.docker.internal:9090
-    # Specifies the URL where Grafana can reach the Prometheus server. Here it’s set to the host’s IP on port 9090.
+    # Specifies the URL where Grafana can reach the Prometheus
+    # server. Here it’s set to the host’s IP on port 9090.
 
     editable: false
-    # When set to false, prevents users from editing this data source through the Grafana UI.
+    # When set to false, prevents users from editing this data
+    # source through the Grafana UI.
 
     jsonData:
       httpMethod: POST
-      # Sets the HTTP method to POST for requests to this Prometheus data source.
+      # Sets the HTTP method to POST for requests to this Prometheus
+      # data source.
 
       exemplarTraceIdDestinations:
         - name: trace_id
           # Defines the name of the field to match trace IDs.
 
           datasourceUid: tempo
-          # Specifies that exemplars (trace examples) should be linked to the Tempo data source.
+          # Specifies that exemplars (trace examples) should be
+          # linked to the Tempo data source.
 
   - name: Tempo
     # Defines the name of the Tempo data source in Grafana.
 
     type: tempo
-    # Specifies the type of data source, which is Tempo (for tracing data).
+    # Specifies the type of data source, which is Tempo
+    # (for tracing data).
 
     access: proxy
-    # Sets the access mode to "proxy", meaning Grafana will proxy requests to Tempo.
+    # Sets the access mode to "proxy", meaning Grafana will proxy
+    # requests to Tempo.
 
     orgId: 1
-    # Specifies the organization ID in Grafana to which this data source belongs.
+    # Specifies the organization ID in Grafana to which this
+    # data source belongs.
 
     url: http://host.docker.internal:3200
-    # Specifies the URL where Grafana can reach the Tempo server. Here it’s set to the host’s IP on port 3200.
+    # Specifies the URL where Grafana can reach the Tempo server.
+    # Here it’s set to the host’s IP on port 3200.
 
     basicAuth: false
     # Disables basic authentication for this data source.
@@ -59,21 +70,26 @@ datasources:
     # Specifies the API version used by Tempo.
 
     uid: tempo
-    # Assigns a unique identifier (UID) to the data source for referencing in Grafana.
+    # Assigns a unique identifier (UID) to the data source for
+    # referencing in Grafana.
 
     jsonData:
       httpMethod: GET
-      # Sets the HTTP method to GET for requests to this Tempo data source.
+      # Sets the HTTP method to GET for requests to this Tempo
+      # data source.
 
       tracesToLogsV2:
         datasourceUid: 'loki'
-        # Specifies the UID of the Loki data source for linking logs to traces.
+        # Specifies the UID of the Loki data source for linking
+        # logs to traces.
 
         spanStartTimeShift: '-1h'
-        # Adjusts the starting time for log entries by shifting it back one hour.
+        # Adjusts the starting time for log entries by shifting
+        # it back one hour.
 
         spanEndTimeShift: '1h'
-        # Adjusts the ending time for log entries by shifting it forward one hour.
+        # Adjusts the ending time for log entries by shifting it
+        # forward one hour.
 
         filterByTraceID: true
         # Enables filtering of logs by trace ID.
@@ -83,11 +99,13 @@ datasources:
 
       tracesToMetrics:
         datasourceUid: Prometheus
-        # Specifies the UID of the Prometheus data source for linking traces to metrics.
+        # Specifies the UID of the Prometheus data source for linking
+        # traces to metrics.
 
       tracesToLogs:
         datasourceUid: loki
-        # Specifies the UID of the Loki data source for linking traces to logs.
+        # Specifies the UID of the Loki data source for linking
+        # traces to logs.
 
         mapTagNamesEnabled: true
         # Enables mapping of tag names from traces to logs.
@@ -99,46 +117,57 @@ datasources:
         # Enables filtering of logs by span ID.
 
         spanStartTimeShift: '-10m'
-        # Adjusts the starting time for logs by shifting it back ten minutes.
+        # Adjusts the starting time for logs by shifting it
+        # back ten minutes.
 
         spanEndTimeShift: '10m'
-        # Adjusts the ending time for logs by shifting it forward ten minutes.
+        # Adjusts the ending time for logs by shifting it
+        # forward ten minutes.
 
       lokiSearch:
         datasourceUid: loki
-        # Specifies the UID of the Loki data source for log searching.
+        # Specifies the UID of the Loki data source for
+        # log searching.
 
       serviceMap:
         datasourceUid: Prometheus
-        # Specifies the UID of the Prometheus data source for creating a service map.
+        # Specifies the UID of the Prometheus data source for
+        # creating a service map.
 
       nodeGraph:
         enabled: true
-        # Enables the node graph feature, which visually represents the relationships between services.
+        # Enables the node graph feature, which visually
+        # represents the relationships between services.
 
   - name: Loki
     # Defines the name of the Loki data source in Grafana.
 
     type: loki
-    # Specifies the type of data source, which is Loki (for log aggregation).
+    # Specifies the type of data source, which is Loki
+    # (for log aggregation).
 
     uid: loki
-    # Assigns a unique identifier (UID) to the Loki data source for referencing in Grafana.
+    # Assigns a unique identifier (UID) to the Loki data
+    # source for referencing in Grafana.
 
     access: proxy
-    # Sets the access mode to "proxy", meaning Grafana will proxy requests to Loki.
+    # Sets the access mode to "proxy", meaning Grafana
+    # will proxy requests to Loki.
 
     orgId: 1
-    # Specifies the organization ID in Grafana to which this data source belongs.
+    # Specifies the organization ID in Grafana to which
+    # this data source belongs.
 
     url: http://host.docker.internal:3100
-    # Specifies the URL where Grafana can reach the Loki server. Here it’s set to the host’s IP on port 3100.
+    # Specifies the URL where Grafana can reach the Loki
+    # server. Here it’s set to the host’s IP on port 3100.
 
     basicAuth: false
     # Disables basic authentication for this data source.
 
     isDefault: false
-    # Specifies that this is not the default data source in Grafana.
+    # Specifies that this is not the default data source
+    # in Grafana.
 
     version: 1
     # Specifies the version of the data source configuration.
@@ -155,7 +184,8 @@ datasources:
 
       derivedFields:
         - datasourceUid: tempo
-          # Specifies that the derived fields will use the Tempo data source.
+          # Specifies that the derived fields will use the
+          # Tempo data source.
 
           matcherRegex: '.+ --- \[.+\] \[.+\] \[(\w*)-\w*\] .+'
           # Defines a regular expression to extract trace IDs from logs.
@@ -164,4 +194,5 @@ datasources:
           # Assigns a name to the derived field, which is "TraceID".
 
           url: $${__value.raw}
-          # Configures the URL for linking the extracted trace ID to the Tempo trace viewer.
+          # Configures the URL for linking the extracted trace ID
+          # to the Tempo trace viewer.
