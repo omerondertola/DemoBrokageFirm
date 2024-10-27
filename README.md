@@ -95,10 +95,9 @@
 
 14. 4 Customers (1 Admin), 4 Assets, 2 Orders (Buy) Exists By Default.
 
-15. Docker Run Prometheus
+15. Prometheus and Grafana End Points added.
 
-         docker run --name prometheus -d -p 127.0.0.1:9090:9090 prom/prometheus
+         Prometheus: http://localhost:9090/
 
-16. Docker Run Grafana
+         Grafana: http://localhost:3000/
 
-         docker run -d --name=grafana -p 3000:3000 grafana/grafana
