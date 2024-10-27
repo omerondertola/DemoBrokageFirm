@@ -1,24 +1,45 @@
 server:
+  # Configures the HTTP server settings for Tempo.
   http_listen_port: 3200
+  # Port where Tempo listens for HTTP requests (default: 3200)
+
 distributor:
+  # Configuration for the distributor, which receives trace data from different sources.
   receivers:
     otlp:
+      # OpenTelemetry Protocol (OTLP) configuration, commonly used to collect traces.
       protocols:
         http:
+        # Enables OTLP over HTTP to allow trace data ingestion via HTTP requests.
+
 storage:
   trace:
+    # Trace storage configuration, specifying the backend and storage path for trace data.
     backend: local
+    # Sets the trace storage backend to local file storage (ideal for development).
     local:
       path: /tmp/tempo/blocks
+      # Filesystem path where Tempo will store trace data blocks.
+
 metrics_generator:
+  # Configuration for metrics generation from trace data, enabling additional insights such as span metrics and service graphs.
   registry:
     external_labels:
       source: tempo
+      # Adds a label 'source=tempo' to all generated metrics for easy identification.
   storage:
+    # Specifies the storage options for generated metrics, including a Write-Ahead Log (WAL) path and Prometheus remote write.
     path: /tmp/tempo/generator/wal
+    # Path for the WAL (Write-Ahead Log), storing temporary metrics data.
     remote_write:
       - url: http://host.docker.internal:9090/api/v1/write
+        # URL for Prometheus remote write endpoint, allowing Prometheus to receive metrics from Tempo.
         send_exemplars: true
-overrides:
-  metrics_generator_processors: [service-graphs, span-metrics]
+        # Enables sending exemplars (example traces) to Prometheus for linking traces with metrics.
 
+overrides:
+  # Custom configurations to adjust Tempo’s behavior, particularly for the metrics generator.
+  metrics_generator_processors: [service-graphs, span-metrics]
+  # Specifies processors for metrics generation.
+  # - service-graphs: Generates service dependency graphs from trace data.
+  # - span-metrics: Generates metrics summarizing span data to visualize request/response times in Prometheus.
