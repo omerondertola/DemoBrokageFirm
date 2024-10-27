@@ -1,28 +1,50 @@
 extensions:
   zpages:
     endpoint: 0.0.0.0:55679
+    # Enables zPages, an extension that provides in-process diagnostic pages (such as trace and metrics stats).
+    # "endpoint: 0.0.0.0:55679" makes zPages accessible on all network interfaces on port 55679.
 
 receivers:
   otlp:
     protocols:
       http:
         endpoint: 0.0.0.0:34318
+        # Configures the OpenTelemetry Protocol (OTLP) receiver to listen on all interfaces over HTTP on port 34318.
+        # The OTLP receiver allows the collector to receive telemetry data in the OTLP format from instrumented applications.
 
 processors:
   batch:
+  # Defines the batch processor, which batches telemetry data before sending it to exporters.
+  # Batching improves efficiency by reducing the number of outgoing requests, especially in high-throughput scenarios.
 
 exporters:
   traces:
     endpoint: http://tempo:34318
+    # Configures the "traces" exporter to send trace data to Grafana Tempo.
+    # The endpoint "http://tempo:34318" points to Tempo's HTTP endpoint for receiving traces.
+
   debug:
     verbosity: detailed
+    # Configures the debug exporter, which is used for logging telemetry data for debugging purposes.
+    # "verbosity: detailed" ensures that detailed trace information is logged for debugging.
+
   prometheusremotewrite:
     endpoint: http://prometheus:9090/api/v1/push
+    # Configures the Prometheus Remote Write exporter, allowing metrics to be sent to Prometheus.
+    # The endpoint "http://prometheus:9090/api/v1/push" is the Prometheus HTTP API endpoint for receiving metrics.
 
 service:
   pipelines:
     metrics:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [debug, logging, traces, prometheusremotewrite]
+      # Specifies the OTLP receiver for the metrics pipeline, meaning it will receive metrics data in the OTLP format.
 
+      processors: [batch]
+      # Adds the batch processor to the pipeline to improve performance by batching metrics before exporting.
+
+      exporters: [debug, logging, traces, prometheusremotewrite]
+      # Specifies the exporters for the metrics pipeline.
+      # - "debug": Logs detailed metrics for debugging.
+      # - "logging": Logs basic telemetry data to the console.
+      # - "traces": Sends trace data to Tempo for tracing purposes.
+      # - "prometheusremotewrite": Exports metrics to Prometheus, making metrics available for querying.

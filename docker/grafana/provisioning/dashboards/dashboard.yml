@@ -1,11 +1,24 @@
 apiVersion: 1
+# Specifies the version of the configuration format. Currently, only version "1" is supported by Grafana.
 
 providers:
-    - name: dashboards
-      type: file
-      disableDeletion: true
-      editable: true
-      options:
-          path: /etc/grafana/provisioning/dashboards
-          foldersFromFilesStructure: true
+  - name: dashboards
+    # An arbitrary name for this dashboard provider for identification within Grafana.
 
+    type: file
+    # Specifies that dashboards are provisioned from JSON files in a specified directory.
+
+    disableDeletion: true
+    # Prevents dashboards provisioned by this provider from being deleted in the Grafana UI.
+
+    editable: true
+    # Allows dashboards provisioned by this provider to be edited directly in the Grafana UI.
+
+    options:
+      path: /etc/grafana/provisioning/dashboards
+      # Sets the directory path where Grafana will look for JSON files to load as dashboards.
+      # Grafana will load all JSON files in this directory as dashboards upon startup.
+
+      foldersFromFilesStructure: true
+      # When set to true, Grafana organizes dashboards into folders based on the directory structure of files within the specified path.
+      # This allows for automatic categorization of dashboards in Grafana based on how they are organized in the filesystem.

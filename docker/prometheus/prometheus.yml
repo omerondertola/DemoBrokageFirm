@@ -1,12 +1,38 @@
 global:
-    scrape_interval: 2s
-    evaluation_interval: 2s
+  scrape_interval: 2s
+  # Sets the global scrape interval, which defines how often Prometheus
+  # scrapes all targets by default.
+  # Here, it is set to scrape every 2 seconds.
+
+  evaluation_interval: 2s
+  # Sets the interval at which Prometheus evaluates rules (if any are defined).
+  # Here, Prometheus evaluates rules every 2 seconds.
 
 scrape_configs:
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  # Defines the list of scrape configurations for Prometheus to fetch metrics
+  # from different targets.
+
   - job_name: 'demo'
-    # Override the global default and scrape targets from this job every 5 seconds.
+    # Specifies a job name for this scrape configuration.
+    # Prometheus adds a label "job=demo" to all timeseries scraped from this
+    # configuration.
+
     scrape_interval: 2s
+    # Overrides the global scrape interval for this job.
+    # Prometheus will scrape the targets for this job every 2 seconds,
+    # rather than the global interval.
+
     metrics_path: '/actuator/prometheus'
+    # Sets the path that Prometheus will use to retrieve metrics from each
+    # target in this job.
+    # The default path is "/metrics", but here it’s set to "/actuator/prometheus"
+    # for Spring Boot applications.
+
     static_configs:
       - targets: ['host.docker.internal:8080']
+      # Lists the static targets for this job, which are the endpoints
+      # Prometheus will scrape.
+      # "host.docker.internal:8080" is the target address where Prometheus
+      # will scrape metrics.
+      # "host.docker.internal" allows Docker containers to reach the host,
+      # and "8080" is the application’s port.

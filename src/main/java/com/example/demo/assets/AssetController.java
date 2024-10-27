@@ -99,7 +99,10 @@ public class AssetController {
      */
     @GetMapping("/{customerId}")
     @PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id")
-    @Observed(name = "getAssetsOfCustomer", contextualName = "get-assets-of-customer")
+    @Observed(
+            name = "getAssetsOfCustomer",
+            contextualName = "get-assets-of-customer",
+            lowCardinalityKeyValues = {"customer", "admin", "customer-1", "customer-2"})
     public ResponseEntity<List<Asset>> getAssetsOfCustomer(
             @PathVariable("customerId") long customerId
     ) throws CustomerNotFoundException {
