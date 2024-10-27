@@ -8,8 +8,12 @@ import com.example.demo.assets.model.DepositMoneyDto;
 import com.example.demo.assets.model.WithdrawMoneyDto;
 import com.example.demo.utils.ControllerUtils;
 import com.example.demo.customers.service.CustomerNotFoundException;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +25,10 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/apis/v1/assets")
+@Log
 public class AssetController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AssetController.class);
 
     private final AssetService assetService;
 
@@ -29,7 +36,14 @@ public class AssetController {
     // TODO - LIST ALL ASSETS REQUIREMENT
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Observed(name = "getAllAssets",
+            contextualName = "get-all-assets")
     public ResponseEntity<List<Asset>> getAllAssets() {
+        log.info("Get All Assets Called..");
+        try {
+            Thread.sleep(200);
+        } catch (Throwable e) {
+        }
         return ResponseEntity.ok(assetService.getAllAssets());
     }
 
@@ -37,10 +51,17 @@ public class AssetController {
     // TODO - LIST ASSETS OF A CUSTOMER REQUOREMENT
     @PreAuthorize("hasAuthority('ADMIN') || #customerId == principal.id")
     @GetMapping("/{customerId}")
+    @Observed(name = "getAllAssets",
+            contextualName = "get-all-assets")
     public ResponseEntity<List<Asset>> getAssetsOfCustomer(
             @PathVariable("customerId")
             long customerId
     ) throws CustomerNotFoundException {
+        log.info("getting customer information for: "+customerId);
+        try {
+            Thread.sleep(200);
+        } catch (Throwable e) {
+        }
         return ResponseEntity.ok(assetService.getAssetsOfCustomer(customerId));
     }
 

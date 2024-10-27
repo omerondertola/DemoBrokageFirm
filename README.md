@@ -94,5 +94,11 @@
 13. Connection port is 8080
 
 14. 4 Customers (1 Admin), 4 Assets, 2 Orders (Buy) Exists By Default.
-    
-   
+
+15. Docker Run Prometheus
+
+         docker run --name prometheus -d -p 127.0.0.1:9090:9090 prom/prometheus
+
+16. Docker Run Grafana
+
+         docker run -d --name=grafana -p 3000:3000 grafana/grafana

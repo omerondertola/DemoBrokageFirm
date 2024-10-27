@@ -24,9 +24,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class DemoApplication implements CommandLineRunner {
 
-	@Autowired
-	private RequestMappingHandlerMapping requestHandlerMapping;
-
 	private final CustomerService customerService;
 	private final AssetService assetService;
 	private final OrderService orderService;
@@ -50,9 +47,6 @@ public class DemoApplication implements CommandLineRunner {
 		System.out.println("");
 		System.out.println("API END POINTS");
 		System.out.println("====================================");
-
-		this.requestHandlerMapping.getHandlerMethods()
-				.forEach((key, value) ->  System.out.println(key + " -> "+ value));
 	}
 
 	private void printUserNames() {
