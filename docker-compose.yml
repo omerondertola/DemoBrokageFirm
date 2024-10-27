@@ -13,7 +13,7 @@ services:
   #            - 55679:55679 # zpages extension
   # OpenTelemetry Collector service
   collector:
-    image: otel/opentelemetry-collector:0.103.1 # OpenTelemetry Collector image for gathering telemetry data
+    image: otel/opentelemetry-collector:latest # OpenTelemetry Collector image for gathering telemetry data
     extra_hosts:
       - 'host.docker.internal:host-gateway' # Maps 'host.docker.internal' to the Docker host IP for internal network access
     volumes:
@@ -23,12 +23,12 @@ services:
       - 8888:8888   # Prometheus metrics endpoint exposed by the collector
       - 8889:8889   # Prometheus exporter metrics for detailed insights
       - 13133:13133 # Health check endpoint for monitoring the collector’s status
-      - 4318:4318   # OTLP HTTP receiver endpoint (for metrics and spans)
+      - 34318:4318   # OTLP HTTP receiver endpoint (for metrics and spans)
       - 55679:55679 # Zpages extension for trace monitoring
 
   # Prometheus monitoring service
   prometheus:
-    image: prom/prometheus:v2.54.1 # Prometheus image for monitoring
+    image: prom/prometheus:latest # Prometheus image for monitoring
     extra_hosts:
       - 'host.docker.internal:host-gateway' # Enables communication between Prometheus and host network
     command:
@@ -44,7 +44,7 @@ services:
 
   # Grafana visualization service
   grafana:
-    image: grafana/grafana:10.4.10 # Grafana image for visualizing and analyzing metrics
+    image: grafana/grafana:latest # Grafana image for visualizing and analyzing metrics
     extra_hosts:
       - 'host.docker.internal:host-gateway' # Enables Grafana to access host network services
     environment:
@@ -60,7 +60,7 @@ services:
 
   # Tempo tracing service
   tempo:
-    image: grafana/tempo:2.4.2 # Tempo image for distributed tracing
+    image: grafana/tempo:latest # Tempo image for distributed tracing
     extra_hosts:
       - 'host.docker.internal:host-gateway' # Enables Tempo to communicate with host services
     command: ['-config.file=/etc/tempo.yml'] # Specifies Tempo configuration file for tracing settings
@@ -69,11 +69,11 @@ services:
       - ./docker/grafana/tempo.yml:/etc/tempo.yml:ro # Mounts Tempo config file in read-only mode
     ports:
       - "3200:3200" # Main HTTP endpoint for Tempo
-      - "4318:4318" # OTLP HTTP receiver for receiving spans
+      - "44318:4318" # OTLP HTTP receiver for receiving spans
 
   # Loki logging service
   loki:
-    image: grafana/loki:3.1.2 # Loki image for log aggregation
+    image: grafana/loki:latest # Loki image for log aggregation
     extra_hosts:
       - 'host.docker.internal:host-gateway' # Enables Loki to access host network
     command: ['-config.file=/etc/loki/local-config.yaml'] # Config file specifying Loki settings for log management

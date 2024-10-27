@@ -6,14 +6,14 @@ receivers:
   otlp:
     protocols:
       http:
-        endpoint: 0.0.0.0:4318
+        endpoint: 0.0.0.0:34318
 
 processors:
   batch:
 
 exporters:
   traces:
-    endpoint: http://tempo:4318
+    endpoint: http://tempo:34318
   debug:
     verbosity: detailed
   prometheusremotewrite:
