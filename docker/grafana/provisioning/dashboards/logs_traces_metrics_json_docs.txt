@@ -1,0 +1,390 @@
+{
+    "annotations": {
+        // Configures the annotations for the dashboard, used to highlight events or alerts.
+        "list": [
+            {
+                "builtIn": 1,
+                // Indicates a built-in Grafana annotation.
+
+                "datasource": {
+                    "type": "grafana",
+                    "uid": "-- Grafana --"
+                },
+                // Sets the datasource for annotations, here using Grafana’s built-in source.
+
+                "enable": true,
+                // Enables the annotation for use in the dashboard.
+
+                "hide": true,
+                // Hides the annotation icon from the panel, showing only in the settings.
+
+                "iconColor": "rgba(0, 211, 255, 1)",
+                // Sets the color of the annotation icon in RGBA format.
+
+                "name": "Annotations & Alerts",
+                // Provides a name for this annotation configuration.
+
+                "target": {
+                    "limit": 100,
+                    // Limits the number of annotations displayed to 100.
+
+                    "matchAny": false,
+                    // Requires all criteria to match for an annotation to display.
+
+                    "tags": [],
+                    // No specific tags filter for annotations.
+
+                    "type": "dashboard"
+                    // Sets the annotation type, applying it to the dashboard.
+                },
+                "type": "dashboard"
+                // Specifies that this annotation is associated with the dashboard.
+            }
+        ]
+    },
+    "editable": true,
+    // Allows editing of this dashboard by users.
+
+    "fiscalYearStartMonth": 0,
+    // Sets the start month for the fiscal year, with 0 indicating January.
+
+    "graphTooltip": 0,
+    // Sets tooltip behavior, with 0 meaning the default tooltip display.
+
+    "id": 3,
+    // Unique identifier for the dashboard.
+
+    "links": [],
+    // Defines an empty list of links, as no links are configured for this dashboard.
+
+    "liveNow": false,
+    // Disables live mode, so the dashboard doesn’t auto-refresh in real-time.
+
+    "panels": [
+        {
+            "datasource": {
+                "type": "loki",
+                "uid": "loki"
+            },
+            // Configures the data source for this panel as Loki, used for logging.
+
+            "description": "",
+            // No description is provided for this panel.
+
+            "gridPos": {
+                "h": 10,
+                "w": 23,
+                "x": 0,
+                "y": 0
+            },
+            // Sets the panel’s position and dimensions in the grid layout.
+
+            "id": 2,
+            // Unique identifier for this panel.
+
+            "options": {
+                "dedupStrategy": "none",
+                // Sets the deduplication strategy to "none", displaying all logs.
+
+                "enableLogDetails": true,
+                // Enables detailed log display within the panel.
+
+                "prettifyLogMessage": true,
+                // Formats log messages for easier readability.
+
+                "showCommonLabels": true,
+                // Displays common labels for each log entry.
+
+                "showLabels": true,
+                // Shows all labels associated with each log entry.
+
+                "showTime": true,
+                // Displays the timestamp for each log message.
+
+                "sortOrder": "Ascending",
+                // Sorts logs in ascending order by timestamp.
+
+                "wrapLogMessage": true
+                // Enables wrapping of long log messages within the panel.
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "loki",
+                        "uid": "loki"
+                    },
+                    // Specifies the data source as Loki for the log target.
+
+                    "editorMode": "builder",
+                    // Sets the editor mode to "builder", providing a simple query builder UI.
+
+                    "expr": "{app=~\".+\"} |= `$traceId`",
+                    // A Loki query expression to filter logs based on the presence of `$traceId`.
+
+                    "queryType": "range",
+                    // Specifies the query type as "range", querying logs over a specific time range.
+
+                    "refId": "A"
+                    // Reference ID for this target, used to identify it in expressions or links.
+                }
+            ],
+            "title": "Logs with trace ID $traceId",
+            // Sets the panel title, which allows for displaying logs related to a specific trace ID.
+
+            "type": "logs"
+            // Specifies the panel type as "logs", designed to display log data.
+        },
+        {
+            "datasource": {
+                "type": "tempo",
+                "uid": "tempo"
+            },
+            // Configures the data source for this panel as Tempo, used for tracing.
+
+            "description": "",
+            // No description is provided for this panel.
+
+            "gridPos": {
+                "h": 15,
+                "w": 23,
+                "x": 0,
+                "y": 10
+            },
+            // Sets the panel’s position and dimensions in the grid layout.
+
+            "id": 6,
+            // Unique identifier for this panel.
+
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "tempo",
+                        "uid": "tempo"
+                    },
+                    // Specifies the data source as Tempo for this trace target.
+
+                    "filters": [
+                        {
+                            "id": "015bc435",
+                            "operator": "=",
+                            "scope": "span"
+                        }
+                    ],
+                    // Adds a filter on the trace data based on a specific span ID.
+
+                    "limit": 20,
+                    // Limits the number of traces displayed to 20.
+
+                    "query": "$traceId",
+                    // Sets a query variable for trace ID, to filter results based on a specific trace.
+
+                    "queryType": "traceql",
+                    // Uses TraceQL, a query language specific to tracing data, to fetch trace data.
+
+                    "refId": "A",
+                    // Reference ID for this target, used to identify it in expressions or links.
+
+                    "tableType": "traces"
+                    // Sets the display type for the trace data in the panel as "traces".
+                }
+            ],
+            "title": "Trace View for trace with id $traceId",
+            // Sets the panel title, allowing it to display traces based on a specific trace ID.
+
+            "type": "traces"
+            // Specifies the panel type as "traces", designed to display tracing data.
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            // Configures the data source for this panel as Prometheus, used for metrics.
+
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    // Sets the default color mode to "palette-classic".
+
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    // Sets various display options for chart appearance, line styles, and stacking options.
+
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    // Configures thresholds with color coding for visual indicators.
+
+                    "unit": "ms"
+                    // Sets the unit of measurement to milliseconds (ms) for this panel.
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 23,
+                "x": 0,
+                "y": 25
+            },
+            // Sets the panel’s position and dimensions in the grid layout.
+
+            "id": 4,
+            // Unique identifier for this panel.
+
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                // Configures the legend display, showing it at the bottom of the panel.
+
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+                // Configures the tooltip mode to show only one data point at a time.
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "editorMode": "code",
+                    "exemplar": true,
+                    "expr": "histogram_quantile(1.00, sum(rate(http_server_requests_milliseconds_bucket{uri=~\".*\"}[$__rate_interval])) by (le))",
+                    "legendFormat": "max",
+                    "range": true,
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "editorMode": "code",
+                    "exemplar": true,
+                    "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_milliseconds_bucket{uri=~\".*\"}[$__rate_interval])) by (le))",
+                    "hide": false,
+                    "legendFormat": "tp99",
+                    "range": true,
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "editorMode": "code",
+                    "exemplar": true,
+                    "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_milliseconds_bucket{uri=~\".*\"}[$__rate_interval])) by (le))",
+                    "hide": false,
+                    "legendFormat": "tp95",
+                    "range": true,
+                    "refId": "C"
+                }
+            ],
+            "title": "Latency for All",
+            // Sets the title for this panel to show latency metrics.
+
+            "type": "timeseries"
+            // Specifies the panel type as "timeseries", designed for time-series metrics.
+        }
+    ],
+    "schemaVersion": 39,
+    // Version of the dashboard schema. Indicates compatibility with Grafana versions.
+
+    "tags": [],
+    // No tags are applied to this dashboard.
+
+    "templating": {
+        "list": [
+            {
+                "current": {
+                    "selected": false
+                },
+                "description": "Trace Id",
+                "hide": 0,
+                "includeAll": false,
+                "label": "Trace ID",
+                "multi": false,
+                "name": "traceId",
+                "options": [],
+                "query": "",
+                "queryValue": "",
+                "skipUrlSync": false,
+                "type": "custom"
+            }
+        ]
+    },
+    // Sets up templating options, allowing for a "Trace ID" variable that can be used in queries.
+
+    "time": {
+        "from": "now-15m",
+        "to": "now"
+    },
+    // Sets the default time range for the dashboard, showing data from the last 15 minutes.
+
+    "timepicker": {},
+    // Defines options for the time picker, left empty for default behavior.
+
+    "timezone": "",
+    // Sets the timezone for the dashboard. Empty means it will use the browser’s timezone.
+
+    "title": "Logs, Traces, Metrics",
+    // Title of the dashboard, displayed at the top of the dashboard view.
+
+    "uid": "edz2d9w1so8aoa",
+    // Unique identifier for the dashboard, used for referencing and linking.
+
+    "version": 1,
+    // Version of the dashboard configuration. Increments each time the dashboard is modified.
+
+    "weekStart": ""
+    // Defines the start day of the week for date selectors. Empty defaults to the system setting.
+}
